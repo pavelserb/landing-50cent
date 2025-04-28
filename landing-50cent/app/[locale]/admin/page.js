@@ -121,7 +121,7 @@ export default function AdminPage() {
 
       {/* === Video  Advantages === */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Видео и Преимущества</h2>
+        <h2 className="text-xl font-semibold">Video & Advantages</h2>
         {/* Advantages */}
         {contentData.advantages.map((adv, i) => (
           <div key={adv.id} className="border rounded p-4 space-y-2">
