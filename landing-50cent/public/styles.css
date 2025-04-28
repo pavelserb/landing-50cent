@@ -944,11 +944,6 @@
       }
     }
   }
-  .last\:mr-0 {
-    &:last-child {
-      margin-right: calc(var(--spacing) * 0);
-    }
-  }
   .hover\:scale-105 {
     &:hover {
       @media (hover: hover) {
