@@ -6,15 +6,28 @@ import { useState } from 'react'
 
 export default function EarlyAccessForm({ data }) {
   const t = useTranslations()
-  const [form, setForm] = useState({ name: '', email: '' })
 
-  const handleChange = (e) => {
+  const [form, setForm]   = useState({ name: '', email: '' })
+  const [status, setStatus] = useState('idle')     // idle | ok | error | loading
+
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value })
-  }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: отправка form на сервер
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/early-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
+      if (!res.ok) throw new Error()
+      setStatus('ok')
+      setForm({ name: '', email: '' })          // очистим поля
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -26,6 +39,19 @@ export default function EarlyAccessForm({ data }) {
         <p className="text-center font-body mb-6">
           {t('earlyAccess.description')}
         </p>
+
+        {/* feedback */}
+        {status === 'ok' && (
+          <p className="mb-4 text-green-600 text-center">
+            Thanks! We’ll keep you posted.
+          </p>
+        )}
+        {status === 'error' && (
+          <p className="mb-4 text-red-600 text-center">
+            Oops, something went wrong – try again later.
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -35,6 +61,7 @@ export default function EarlyAccessForm({ data }) {
             onChange={handleChange}
             className="w-full border rounded p-3"
             required
+            disabled={status === 'loading'}
           />
           <input
             type="email"
@@ -44,12 +71,15 @@ export default function EarlyAccessForm({ data }) {
             onChange={handleChange}
             className="w-full border rounded p-3"
             required
+            disabled={status === 'loading'}
           />
           <button
             type="submit"
-            className="w-full py-3 bg-danger text-white font-heading rounded-lg"
+            disabled={status === 'loading'}
+            className="w-full py-3 bg-black cursor-pointer bg-danger text-white font-heading rounded-lg
+                       disabled:opacity-60 disabled:pointer-events-none"
           >
-            {t('earlyAccess.buttonText')}
+            {status === 'loading' ? '...' : t('earlyAccess.buttonText')}
           </button>
         </form>
       </div>
