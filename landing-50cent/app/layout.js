@@ -34,6 +34,7 @@ export const metadata = {
       // className={`${bebas.variable} ${bebas.className}`}>
       className={`${bebas.variable} ${bebas.className} ${roboto.variable} ${roboto.className} ${robotoCond.variable} ${robotoCond.className}`}>
         <head>
+        <link rel="icon" href="/icon.png" type="image/png" />
         {/* Подключаем сгенерированный tailwind-файл */}
         <link rel="stylesheet" href="/styles.css" />
         <link rel="stylesheet" href="../globals.css" />
