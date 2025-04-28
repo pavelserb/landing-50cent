@@ -1,33 +1,36 @@
 // app/api/early-access/route.js
-import { promises as fs } from 'fs';
-import path from 'path';
-import { NextResponse } from 'next/server';
+import { createClient }   from '@supabase/supabase-js';
+import { NextResponse }   from 'next/server';
 
-const FILE = path.join(process.cwd(), 'data', 'early-access.json');
+/* ➊ ключи берём из .env.local  */
+const supabase = createClient(
+  process.env.SUPABASE_URL,          // e.g. https://xyz.supabase.co
+  process.env.SUPABASE_SERVICE_KEY   // **service-role** key ─ умеет INSERT
+);
 
+/* ➋ POST /api/early-access  */
 export async function POST(req) {
   try {
     const { name, email } = await req.json();
 
-    // элементарная валидация
+    // простая валидация
     if (!name?.trim() || !/^[\w-.]+@[\w-]+\.[a-z]{2,}$/i.test(email)) {
       return NextResponse.json({ error: 'Bad request' }, { status: 400 });
     }
 
-    // читаем текущий список (если нет файла – пустой массив)
-    let list = [];
-    try {
-      const txt = await fs.readFile(FILE, 'utf-8');
-      list = JSON.parse(txt);
-    } catch { /* first run – no file yet */ }
+    /* ➌ запись в таблицу leads */
+    const { error } = await supabase
+      .from('leads')
+      .insert({ name: name.trim(), email: email.trim() });
 
-    list.push({ name, email, ts: Date.now() });
-
-    await fs.writeFile(FILE, JSON.stringify(list, null, 2));
+    if (error) {
+      console.error('Supabase insert error:', error);
+      return NextResponse.json({ error: 'DB error' }, { status: 500 });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (e) {
-    console.error('early-access POST error:', e);
+    console.error('early-access API error:', e);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
