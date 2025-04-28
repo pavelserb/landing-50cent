@@ -20,7 +20,7 @@ export async function POST(req) {
 
     /* ➌ запись в таблицу leads */
     const { error } = await supabase
-      .from('leads')
+      .from('50-earlyAccessLeads')
       .insert({ name: name.trim(), email: email.trim() });
 
     if (error) {
