@@ -1,0 +1,118 @@
+{
+  "siteTitle": "50 CENT",
+  "eventDate": "PGE NARODOWY • 10.08.2025",
+  "buyButton": "BUY TICKETS",
+  "ticketsTitle": "TICKETS",
+  "tickets": [
+    {
+      "type": "Golden Circle",
+      "desc": "Early-bird",
+      "buttonText": "BUY TICKETS"
+    },
+    {
+      "type": "General Admission",
+      "desc": "Early-bird",
+      "buttonText": "BUY TICKETS"
+    },
+    {
+      "type": "Stands",
+      "desc": "Limited capacity",
+      "buttonText": "BUY TICKETS"
+    }
+  ],
+  "advantages": [
+    {
+      "title": "Massive Scale",
+      "description": "Experience the energy of a 40–50,000 capacity stadium show."
+    },
+    {
+      "title": "Iconic Star",
+      "description": "Witness a performance by global superstar 50 Cent."
+    },
+    {
+      "title": "Universal Appeal",
+      "description": "Music that transcends genres and generations."
+    },
+    {
+      "title": "Unforgettable Production",
+      "description": "High-quality sound, lighting and special effects."
+    }
+  ],
+  "newsTitle": "Latest news",
+  "news": [
+    {
+      "title": "Meet & Greet",
+      "description": "Get up close with 50 Cent and take a photo backstage.",
+      "buttonText": "Participate"
+    },
+    {
+      "title": "Exclusive Merch",
+      "description": "Limited-edition tour merch available only here.",
+      "buttonText": "Shop Now"
+    },
+    {
+      "title": "Pre-registration",
+      "description": "Limited access to early-bird prices",
+      "buttonText": "Register"
+    }
+  ],
+  "exclusiveOffersTitle": "Exclusive Offers",
+  "exclusiveOffers": [
+    {
+      "title": "Meet & Greet",
+      "description": "Get up close with 50 Cent and take a photo backstage.",
+      "buttonText": "Participate"
+    },
+    {
+      "title": "Exclusive Merch",
+      "description": "Limited-edition tour merch available only here.",
+      "buttonText": "Shop Now"
+    }
+  ],
+  "musicSectionTitle": "Music",
+  "testimonialsTitle": "Testimonials",
+  "socialFeedTitle": "Social feed",
+  "testimonials": [
+    {
+      "text": "It was an unforgettable show! The energy was through the roof."
+    },
+    {
+      "text": "The best concert experience of my life."
+    },
+    {
+      "text": "50 Cent exceeded all expectations. Highly recommend!"
+    }
+  ],
+  "locationTitle": "Location",
+  "getDirections": "Get Directions",
+  "faqTitle": "FAQ",
+  "faq": [
+    {
+      "question": "When will ticket sales start?",
+      "answer": "Sales start on June 1, 2025 at 10:00 local time."
+    },
+    {
+      "question": "Where is the stadium entrance?",
+      "answer": "The main entrance to PGE Narodowy is located on Książęca Street."
+    },
+    {
+      "question": "Can tickets be refunded?",
+      "answer": "Tickets are non-refundable; only exchangeable for another date in case of force majeure."
+    }
+  ],
+  "earlyAccess": {
+    "title": "Early Access Registration",
+    "description": "Leave your name and email to get early access to ticket sales and exclusive zones.",
+    "placeholders": {
+      "name": "Your name",
+      "email": "Your email"
+    },
+    "buttonText": "Sign Up"
+  },
+  "CountdownTimer": {
+    "days": "days",
+    "hours": "hours",
+    "minutes": "min",
+    "seconds": "sec"
+  }
+}

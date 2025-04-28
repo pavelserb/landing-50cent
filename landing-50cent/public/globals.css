@@ -1,0 +1,48 @@
+/* app/globals.css */
+/* @import "tailwindcss"; */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+:root {
+    --font-montserrat: "Montserrat", sans-serif;
+    --font-oswald:    "Oswald",    sans-serif;
+    --font-bebas: "Bebas Neue", sans-serif;
+    --font-roboto: "Roboto", sans-serif;
+    --font-robotocond: "Roboto Condensed", sans-serif;
+  }
+  
+  body {
+    @apply bg-white text-gray-800;
+    font-family: var(--font-oswald);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-montserrat);
+  }
+
+  h2 {
+    font-family: var(--font-bebas);
+    @apply text-6xl;
+  }
+  
+  p, button, input, a {
+    font-family: var(--font-oswald);
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  .container {
+    @apply mx-auto px-4;
+  }
+  
+  
+  
+  /* body header {
+      background-color: chocolate;
+  } */
+
+.hide-scrollbar::-webkit-scrollbar { display:none }
+.hide-scrollbar { scrollbar-width:none }

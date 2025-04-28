@@ -1,0 +1,18 @@
+// app/layout.js
+
+// import '../app/globals.css'    // <-- теперь именно так
+import './globals.css'
+
+export const metadata = {
+    title: 'Landing',
+    description: 'Root layout for redirect page',
+  }
+  
+  export default function RootLayout({ children }) {
+    return (
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    )
+  }
+  

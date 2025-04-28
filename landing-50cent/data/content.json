@@ -1,0 +1,131 @@
+{
+  "heroImage": "/images/hero.jpg",
+  "videoSrc": "/videos/teaser.mp4",
+  "tickets": [
+    {
+      "price": "399.50 zł",
+      "link": "#"
+    },
+    {
+      "price": "599.50 zł",
+      "link": "#"
+    },
+    {
+      "price": "from 269.50 zł",
+      "link": "#"
+    }
+  ],
+  "advantages": [
+    {
+      "id": "adv0",
+      "icon": "›"
+    },
+    {
+      "id": "adv1",
+      "icon": "›"
+    },
+    {
+      "id": "adv2",
+      "icon": "›"
+    },
+    {
+      "id": "adv3",
+      "icon": "›"
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Alice Johnson",
+      "role": "Fan"
+    },
+    {
+      "name": "Michael Lee",
+      "role": "Concertgoer"
+    },
+    {
+      "name": "Sofia Martinez",
+      "role": "Music Lover"
+    }
+  ],
+  "news": [
+    {
+      "link": "#"
+    },
+    {
+      "link": "#"
+    },
+    {
+      "link": "#"
+    }
+  ],
+  "spotifyEmbedUrl": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd",
+  "socialFeed": [
+    {
+      "img": "/images/insta1.jpg",
+      "link": "https://instagram.com/youraccount/post1"
+    },
+    {
+      "img": "/images/insta2.jpg",
+      "link": "https://instagram.com/youraccount/post2"
+    },
+    {
+      "img": "/images/insta3.jpg",
+      "link": "https://tiktok.com/@youraccount/video1"
+    },
+    {
+      "img": "/images/insta4.jpg",
+      "link": "https://instagram.com/youraccount/post3"
+    },
+    {
+      "link": "https://instagram.com/youraccount/post5",
+      "img": "/images/insta1.jpg"
+    }
+  ],
+  "instaPosts": [
+    "https://www.instagram.com/p/C5vZOa8MUdg/",
+    "https://www.instagram.com/p/C5mLPB2s8-J/",
+    "https://www.instagram.com/p/C5cReeSMbXq/",
+    "https://www.instagram.com/p/C5P0DC7M4jm/",
+    "https://www.instagram.com/p/C5D9JpWsK0E/",
+    "https://www.instagram.com/p/C4xbhYtMjAw/",
+    "https://www.instagram.com/p/C4oX1jRMrNc/",
+    "https://www.instagram.com/p/C4VTEtzs4K4/"
+  ],
+  "location": {
+    "name": "PGE Narodowy",
+    "address": "al. Księcia Józefa Poniatowskiego 1, 03-901 Warszawa",
+    "phone": "+48 22 295 9000",
+    "website": "https://pgenarodowy.pl",
+    "mapEmbed": "https://maps.google.com/maps?q=52.2395,21.0450&z=15&output=embed",
+    "lat": 52.2395,
+    "lng": 21.045
+  },
+  "faq": [
+    {},
+    {},
+    {}
+  ],
+  "contacts": [
+    {
+      "type": "Email",
+      "value": "info@50centwarsaw.pl",
+      "link": "mailto:info@50centwarsaw.pl"
+    },
+    {
+      "type": "Phone",
+      "value": "+48 123 456 789",
+      "link": "tel:+48123456789"
+    },
+    {
+      "type": "Instagram",
+      "value": "@50centwarsaw",
+      "link": "https://instagram.com/50centwarsaw"
+    },
+    {
+      "type": "TikTok",
+      "value": "@50centwarsaw",
+      "link": "https://tiktok.com/@50centwarsaw"
+    }
+  ],
+  "earlyAccess": {}
+}

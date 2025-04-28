@@ -1,0 +1,136 @@
+{
+  "siteTitle": "50 Cent LIVE AT PGE NARODOWY",
+  "eventDate": "10 AUGUST 2025",
+  "heroImage": "/images/hero.jpg",
+  "videoSrc": "/videos/teaser.mp4",
+  "advantages": [
+    {
+      "title": "Massive Scale",
+      "description": "Experience the energy of a 40–50,000 capacity stadium show."
+    },
+    {
+      "title": "Iconic Star",
+      "description": "Witness a performance by global superstar 50 Cent."
+    },
+    {
+      "title": "Universal Appeal",
+      "description": "Music that transcends genres and generations."
+    },
+    {
+      "title": "Unforgettable Production",
+      "description": "High‑quality sound, lighting and special effects."
+    }
+  ],
+  "tickets": [
+    {
+      "type": "Early Bird",
+      "price": "€50",
+      "link": "#"
+    },
+    {
+      "type": "Standard",
+      "price": "€80",
+      "link": "#"
+    },
+    {
+      "type": "VIP",
+      "price": "€150",
+      "link": "#"
+    }
+  ],
+  "exclusiveOffers": [
+    {
+      "title": "Meet & Greet",
+      "description": "Get up close with 50 Cent and take a photo backstage.",
+      "buttonText": "Participate",
+      "link": "#"
+    },
+    {
+      "title": "Exclusive Merch",
+      "description": "Limited‑edition tour merch available only here.",
+      "buttonText": "Shop Now",
+      "link": "#"
+    }
+  ],
+  "spotifyEmbedUrl": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd",
+  "testimonials": [
+    {
+      "name": "Alice Johnson",
+      "role": "Fan",
+      "text": "Это было незабываемое шоу! Энергия была на высоте."
+    },
+    {
+      "name": "Michael Lee",
+      "role": "Concertgoer",
+      "text": "Лучшее концертное впечатление в моей жизни."
+    },
+    {
+      "name": "Sofia Martinez",
+      "role": "Music Lover",
+      "text": "50 Cent превзошёл все ожидания. Рекомендую всем!"
+    }
+  ],
+  "socialFeed": [
+    {
+      "img": "/images/insta1.jpg",
+      "link": "https://instagram.com/youraccount/post1"
+    },
+    {
+      "img": "/images/insta2.jpg",
+      "link": "https://instagram.com/youraccount/post2"
+    },
+    {
+      "img": "/images/insta3.jpg",
+      "link": "https://tiktok.com/@youraccount/video1"
+    },
+    {
+      "img": "/images/insta4.jpg",
+      "link": "https://instagram.com/youraccount/post3"
+    }
+  ],
+  "faq": [
+    {
+      "question": "Когда начнутся продажи билетов?",
+      "answer": "Продажи стартуют 1 июня 2025 года в 10:00 по местному времени."
+    },
+    {
+      "question": "Где находится вход на стадион?",
+      "answer": "Главный вход PGE Narodowy расположен с улицы Książęca."
+    },
+    {
+      "question": "Можно ли вернуть билет?",
+      "answer": "Билеты возврату не подлежат, только обмен на другую дату при форс-мажоре."
+    }
+  ],
+  "earlyAccess": {
+    "title": "Регистрация на ранний доступ",
+    "description": "Оставьте имя и email, чтобы первыми получить доступ к ранним продажам и эксклюзивным зонам.",
+    "placeholders": {
+      "name": "Ваше имя",
+      "email": "Ваш email"
+    },
+    "buttonText": "Зарегистрироваться"
+  },
+  "contacts": [
+    {
+      "type": "Email",
+      "value": "info@50centwarsaw.pl",
+      "link": "mailto:info@50centwarsaw.pl"
+    },
+    {
+      "type": "Phone",
+      "value": "+48 123 456 789",
+      "link": "tel:+48123456789"
+    },
+    {
+      "type": "Instagram",
+      "value": "@50centwarsaw",
+      "link": "https://instagram.com/50centwarsaw"
+    },
+    {
+      "type": "TikTok",
+      "value": "@50centwarsaw",
+      "link": "https://tiktok.com/@50centwarsaw"
+    }
+  ]
+}

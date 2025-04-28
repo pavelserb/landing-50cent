@@ -1,0 +1,29 @@
+/* app/globals.css */
+@import "tailwindcss";
+
+
+:root {
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-oswald:    "Oswald",    sans-serif;
+}
+
+body {
+  @apply bg-white text-gray-800;
+  font-family: var(--font-oswald);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-montserrat);
+}
+
+p, button, input, a {
+  font-family: var(--font-oswald);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.container {
+  @apply mx-auto px-4;
+}

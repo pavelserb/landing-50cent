@@ -1,0 +1,115 @@
+{
+  "siteTitle": "50 Cent na żywo na PGE Narodowy",
+  "eventDate": "10 SIERPNIA 2025",
+  "buyButton": "KUP BILETY",
+  "ticketsTitle": "BILETY",
+  "tickets": [
+    {
+      "type": "Przedsprzedaż",
+      "desc": "Early",
+      "buttonText": "KUP BILETY"
+    },
+    {
+      "type": "Standard",
+      "desc": "Early",
+      "buttonText": "KUP BILETY"
+    },
+    {
+      "type": "VIP",
+      "desc": "Limited",
+      "buttonText": "KUP BILETY"
+    }
+  ],
+  "advantages": [
+    {
+      "title": "Ogromna skala",
+      "description": "Poczuj energię koncertu na stadionie o pojemności 40–50 tys. osób."
+    },
+    {
+      "title": "Ikoniczna gwiazda",
+      "description": "Zobacz występ światowej gwiazdy 50 Cent."
+    },
+    {
+      "title": "Uniwersalny przekaz",
+      "description": "Muzyka przekraczająca granice gatunków i pokoleń."
+    },
+    {
+      "title": "Niezapomniana produkcja",
+      "description": "Wysokiej jakości dźwięk, oświetlenie i efekty specjalne."
+    }
+  ],
+  "newsTitle": "Latest news",
+  "news": [
+    {
+      "title": "Meet & Greet",
+      "description": "Poznaj 50 Centa z bliska i zrób sobie zdjęcie za kulisami.",
+      "buttonText": "Weź udział"
+    },
+    {
+      "title": "Ekskluzywne Gadżety",
+      "description": "Limitowane gadżety dostępne tylko tutaj.",
+      "buttonText": "Kup teraz"
+    }
+  ],
+  "exclusiveOffersTitle": "Oferty Specjalne",
+  "exclusiveOffers": [
+    {
+      "title": "Meet & Greet",
+      "description": "Poznaj 50 Centa z bliska i zrób sobie zdjęcie za kulisami.",
+      "buttonText": "Weź udział"
+    },
+    {
+      "title": "Ekskluzywne Gadżety",
+      "description": "Limitowane gadżety dostępne tylko tutaj.",
+      "buttonText": "Kup teraz"
+    }
+  ],
+  "musicSectionTitle": "Music",
+  "testimonialsTitle": "Testimonials",
+  "socialFeedTitle": "Social feed",
+  "testimonials": [
+    {
+      "text": "To było niezapomniane show! Energia była niesamowita."
+    },
+    {
+      "text": "Najlepsze doświadczenie koncertowe w moim życiu."
+    },
+    {
+      "text": "50 Cent przekroczył wszelkie oczekiwania. Gorąco polecam!"
+    }
+  ],
+  "locationTitle": "Location",
+  "getDirections": "Get Directions",
+
+  "faqTitle": "Najczęściej zadawane pytania",
+
+  "faq": [
+    {
+      "question": "Kiedy ruszy sprzedaż biletów?",
+      "answer": "Sprzedaż rozpoczyna się 1 czerwca 2025 o godz. 10:00 czasu lokalnego."
+    },
+    {
+      "question": "Gdzie znajduje się wejście na stadion?",
+      "answer": "Główne wejście na PGE Narodowy znajduje się od strony ulicy Książęcej."
+    },
+    {
+      "question": "Czy można zwrócić bilet?",
+      "answer": "Bilety nie podlegają zwrotowi; można je wymienić na inny termin tylko w przypadku siły wyższej."
+    }
+  ],
+  "earlyAccess": {
+    "title": "Rejestracja do wczesnego dostępu",
+    "description": "Podaj imię i email, aby otrzymać wczesny dostęp do sprzedaży biletów i stref ekskluzywnych.",
+    "placeholders": {
+      "name": "Twoje imię",
+      "email": "Twój e-mail"
+    },
+    "buttonText": "Zarejestruj się"
+  }, 
+  "CountdownTimer": {
+    "days":    "dni",
+    "hours":   "godzin",
+    "minutes": "minut",
+    "seconds": "sekund"
+  }
+}
