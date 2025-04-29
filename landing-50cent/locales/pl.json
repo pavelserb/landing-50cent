@@ -10,7 +10,7 @@
       "buttonText": "KUP BILETY"
     },
     {
-      "type": "Standard",
+      "type": "Golden Circle",
       "desc": "Early",
       "buttonText": "KUP BILETY"
     },
@@ -80,9 +80,7 @@
   ],
   "locationTitle": "Location",
   "getDirections": "Get Directions",
-
   "faqTitle": "Najczęściej zadawane pytania",
-
   "faq": [
     {
       "question": "Kiedy ruszy sprzedaż biletów?",
@@ -105,10 +103,10 @@
       "email": "Twój e-mail"
     },
     "buttonText": "Zarejestruj się"
-  }, 
+  },
   "CountdownTimer": {
-    "days":    "dni",
-    "hours":   "godzin",
+    "days": "dni",
+    "hours": "godzin",
     "minutes": "minut",
     "seconds": "sekund"
   }

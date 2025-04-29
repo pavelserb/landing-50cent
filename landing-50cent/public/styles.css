@@ -262,9 +262,6 @@
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
   }
-  .bottom-4 {
-    bottom: calc(var(--spacing) * 4);
-  }
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
@@ -309,6 +306,9 @@
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -378,12 +378,6 @@
   }
   .h-7 {
     height: calc(var(--spacing) * 7);
-  }
-  .h-\[15\%\] {
-    height: 15%;
-  }
-  .h-\[85\%\] {
-    height: 85%;
   }
   .h-\[360px\] {
     height: 360px;

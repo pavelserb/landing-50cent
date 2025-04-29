@@ -5,12 +5,12 @@
   "ticketsTitle": "TICKETS",
   "tickets": [
     {
-      "type": "Golden Circle",
+      "type": "General Admission",
       "desc": "Early-bird",
       "buttonText": "BUY TICKETS"
     },
     {
-      "type": "General Admission",
+      "type": "Golden Circle",
       "desc": "Early-bird",
       "buttonText": "BUY TICKETS"
     },

@@ -1,143 +1,101 @@
 // components/Hero.jsx
 'use client'
 
-import { motion } from 'framer-motion'
-import CountdownTimer from './CountdownTimer'
-import { useState, useEffect, useRef } from 'react'
-import { usePathname } from 'next/navigation'
-import { ChevronDown } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { motion }            from 'framer-motion'
+import { usePathname }       from 'next/navigation'
+import { ChevronDown }       from 'lucide-react'
+import CountdownTimer        from './CountdownTimer'
 
 export default function Hero({ bgImage, targetDate }) {
-  const heroRef = useRef(null)
-  const pathname = usePathname()
-
+  const heroRef   = useRef(null)
+  const pathname  = usePathname()
   const [showArrow, setShowArrow] = useState(true)
 
+  /* ── динамический расчёт высоты ── */
   useEffect(() => {
-    // function updateHeight() {
-    //   const hdr = document.querySelector('header')
-    //   const hero   = heroRef.current
-    // //   if (!header || !hero) return
-    // //   hero.style.height = `${window.innerHeight - header.offsetHeight}px`
-    // if (hdr && hero) {
-    //     hero.style.height = `${window.innerHeight - hdr.offsetHeight}px`
-    //   }
-    
     function updateHeight() {
-        const hdr  = document.querySelector('header')
-        const hero = heroRef.current
-        const bar  = document.getElementById('mobile-buy-bar')
-        const barH = bar && getComputedStyle(bar).display !== 'none'
-                ? bar.offsetHeight
-                : 0
-        if (hdr && hero) {
-        hero.style.height = `${window.innerHeight - hdr.offsetHeight - barH}px`
-        }    
+      const hero = heroRef.current
+      const hdr  = document.querySelector('header')
+      const bar  = document.getElementById('mobile-buy-bar')
+
+      if (!hero || !hdr) return
+
+      const barH = bar && getComputedStyle(bar).display !== 'none'
+        ? bar.offsetHeight
+        : 0
+
+      /* ① сколько места есть по высоте */
+      const avail = window.innerHeight - hdr.offsetHeight - barH
+
+      /* ② максимум по соотношению (H ≤ 1.5 × W) */
+      const maxByRatio = hero.getBoundingClientRect().width * 1.5
+
+      hero.style.height = `${Math.min(avail, maxByRatio)}px`
     }
-
-
 
     updateHeight()
     window.addEventListener('resize', updateHeight)
+    return () => window.removeEventListener('resize', updateHeight)
+  }, [])
 
-    // const onScroll = () => setShowArrow(false)
-    // прячем стрелку, когда прокрутка > определённого значения
-    const threshold = heroRef.current
-        ? heroRef.current.offsetHeight * 0.1  // например, половины высоты Hero
-        : 100                                 // или 100px запасной вариант
-    const onScroll = () => {
-        if (window.scrollY > threshold) {
-        setShowArrow(false)
-        }
-    }
+  /* ── прячем стрелку при прокрутке hero на 10 % ── */
+  useEffect(() => {
+    const hero = heroRef.current
+    if (!hero) return
 
-    window.addEventListener('scroll', onScroll)
+    const threshold = hero.offsetHeight * 0.1
+    const onScroll  = () => window.scrollY > threshold && setShowArrow(false)
 
-    return () => {
-        window.removeEventListener('resize', updateHeight)
-        window.removeEventListener('scroll', onScroll)
-      }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [pathname])
 
-  const scrollDown = () => {
+  const scrollDown = () =>
     document.getElementById('nextSection')?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <section
       ref={heroRef}
       className="
-        hero-section
-        relative
-        overflow-hidden
-        flex flex-col items-center justify-center
-        bg-[#0f0f0f]
-        // bg-center bg-cover
+        hero-section relative overflow-hidden
+        flex flex-col items-center justify-center bg-[#0f0f0f]
       "
-    //   style={{ backgroundImage: `url(${bgImage})` }}
-    // style={{ backgroundImage: "url('/images/stadium.png')" }}
-
     >
-        {/* ← слой стадиона */}
-    <img
+      {/* фоновый стадион */}
+      <img
         src="/images/stadium.png"
         alt=""
         className="absolute inset-0 w-full h-full object-cover opacity-30"
-    />
-      {/* ────────────── 85%: блок с изображением и оверлеем ────────────── */}
-      {/* <div className="relative w-full h-[85%] flex items-center justify-center overflow-hidden">
-        <img
-          src={bgImage}
-          alt="Hero"
-          className="absolute inset-0 w-auto h-full object-contain mx-auto"
-        />
-      </div> */}
+      />
+
+      {/* постер артиста (займёт всё свободное сверху) */}
       <motion.div
-        className="relative w-full h-[85%] overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 1 }}
+        className="relative w-full flex-1 overflow-hidden"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ delay: .3, duration: 1 }}
       >
         <img
           src={bgImage}
           alt=""
-          className="absolute inset-x-0 top-0 h-full w-auto object-contain object-top mx-auto"
+          className="absolute inset-x-0 top-0 h-full w-auto mx-auto object-contain object-top"
         />
-        {/* <div className="absolute inset-0 bg-black/50" /> */}
       </motion.div>
 
-      {/* ────────────── 15%: блок с таймером ────────────── */}
-      <div className="w-full h-[15%] flex flex-col items-center justify-between relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <CountdownTimer targetDate={targetDate} />
-        </motion.div>
+      {/* таймер + стрелка */}
+      <div className="w-full py-4 flex flex-col items-center">
+        <CountdownTimer targetDate={targetDate} />
 
-      {/* стрелочка вниз */}
-      {/* <button
-        onClick={scrollDown}
-        className="bottom-4 left-1/2 transform text-white animate-bounce p-2"
-        aria-label="Scroll down"
-      >
-        <ChevronDown size={32} />
-      </button> */}
-      {showArrow && (
-        <button
-          onClick={scrollDown}
-          className="bottom-4 left-1/2 transform text-white animate-bounce cursor-pointer"
-          aria-label="Scroll down"
-        >
-          <ChevronDown size={32} />
-        </button>
-      )}
+        {showArrow && (
+          <button
+            onClick={scrollDown}
+            className="mt-3 text-white animate-bounce"
+            aria-label="Scroll down"
+          >
+            <ChevronDown size={32}/>
+          </button>
+        )}
       </div>
-
     </section>
   )
 }
-
-
-
