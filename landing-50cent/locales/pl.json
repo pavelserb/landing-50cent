@@ -49,6 +49,11 @@
       "title": "Ekskluzywne Gadżety",
       "description": "Limitowane gadżety dostępne tylko tutaj.",
       "buttonText": "Kup teraz"
+    },
+    {
+      "title": "Ekskluzywne",
+      "description": "Limitowane",
+      "buttonText": "Kup teraz"
     }
   ],
   "exclusiveOffersTitle": "Oferty Specjalne",

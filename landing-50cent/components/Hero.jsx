@@ -4,10 +4,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion }            from 'framer-motion'
 import { usePathname }       from 'next/navigation'
+import Link from 'next/link'
 import { ChevronDown }       from 'lucide-react'
 import CountdownTimer        from './CountdownTimer'
 
-export default function Hero({ bgImage, targetDate }) {
+// export default function Hero({ bgImage, targetDate }) {
+export default function Hero({ bgImage, targetDate, ctaHref = '#', ctaText }) {
   const heroRef   = useRef(null)
   const pathname  = usePathname()
   const [showArrow, setShowArrow] = useState(true)

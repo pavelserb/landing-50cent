@@ -39,7 +39,7 @@ export const metadata = {
         <link rel="stylesheet" href="/styles.css" />
         <link rel="stylesheet" href="../globals.css" />
       </head>
-        <body>
+        <body className="bg-black">
           {children}</body>
       </html>
     )

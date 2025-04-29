@@ -1,9 +1,13 @@
-'use client'
+// 'use client'
 
 export const dynamic = 'force-dynamic'
 
-import { useTranslations } from 'next-intl'
-import content            from '../../data/content.json'
+// import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
+// import content            from '../../data/content.json'
+// после
+import { getContent }      from '@/lib/getContent'
+
 import Location from '@/components/Location'
 
 
@@ -19,8 +23,14 @@ import SocialFeed      from '@/components/SocialFeed'
 import FAQ             from '@/components/FAQ'
 import EarlyAccessForm from '@/components/EarlyAccessForm'
 
-export default function Page() {
-  const t = useTranslations()
+// export default async function Page({ params }) {
+export default async function Page() {
+
+  // const t = useTranslations()
+  // const t = await getTranslations({ locale: params.locale })
+  const t = await getTranslations()
+
+  const content = await getContent()
 
   const locationData = content.location
 
@@ -84,12 +94,13 @@ export default function Page() {
         date={t('eventDate')}
         bgImage={content.heroImage}
         ctaText={t('buyButton')}
-        onCtaClick={() => window.location.href = '/tickets'}
+        // onCtaClick={() => window.location.href = '/tickets'}
+        ctaHref="/tickets"
         targetDate="2025-08-10T20:00:00Z"
       />
 
       {/* Video + Advantages */}
-      <section id="nextSection" className="py-12 bg-black text-white">
+      <section id="nextSection" className="py-12 bg-[#0f0f0f] text-white">
         <div className="container mx-auto px-4 lg:flex lg:items-center lg:gap-12">
           <div className="w-full lg:w-1/2">
             <VideoSection videoSrc={content.videoSrc} />
