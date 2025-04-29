@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 
 // import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
+import { getTranslationsFromDb }  from '@/lib/getTranslationsFromDb'
 // import content            from '../../data/content.json'
 // после
 import { getContent }      from '@/lib/getContent'
@@ -24,11 +25,17 @@ import FAQ             from '@/components/FAQ'
 import EarlyAccessForm from '@/components/EarlyAccessForm'
 
 // export default async function Page({ params }) {
-export default async function Page() {
+export default async function Page({ params }) {
+// export default async function Page ({ params: { locale } }) {
 
   // const t = useTranslations()
   // const t = await getTranslations({ locale: params.locale })
-  const t = await getTranslations()
+  // const { locale } = params
+  const { locale } = await params
+  const messages   = await getTranslationsFromDb(locale)
+  const t          = await getTranslations({ locale, messages })
+
+  // const t = await getTranslations()
 
   const content = await getContent()
 
