@@ -1,6 +1,8 @@
 // lib/supabaseServer.js
 import { createClient } from '@supabase/supabase-js'
 
+console.log(process.env.SUPABASE_URL)
+
 function getEnv(name) {
   const v = process.env[name]
   if (!v) throw new Error(`${name} is required for server Supabase`)

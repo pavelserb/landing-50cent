@@ -4,6 +4,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { supabaseBrowser } from '@/lib/supabaseClient'
+// import { supabaseBrowser } from '@/lib/supabase'
+// import { supabaseBrowser } from '@/lib/supabase'
+
 
 const LOCALES = ['en', 'pl']
 const ADMIN_USER = 'admin'
@@ -214,19 +217,47 @@ export default function AdminPage() {
           />
         </label>
 
-        {/* Hero Image URL + Upload */}
+        {/* Hero Image URL */}
+        {/* Hero Image */}
         <label className="block">
-          Hero Image URL:
-          <input
-            type="file"
-            accept="image/*"
-            onChange={e => e.target.files?.[0] && 
-              uploadAndSet(['heroImage'], e.target.files[0], 'images')}
-            className="mt-1 w-full border rounded px-2 py-1"
-            value={contentData.heroImage}
-            // onChange={e => setContent({ ...contentData, heroImage: e.target.value })}
-          />
-        </label>
+          Hero Image:
+<div className="flex items-center space-x-2 mb-4">
+  {/* 1) Текстовый input для URL */}
+  <input
+    type="text"
+    placeholder="No file added"
+    className="flex-1 border rounded px-2 py-1"
+    value={contentData.heroImage}
+    onChange={e => updateContent(['heroImage'], e.target.value)}
+  />
+
+  {/* Скрытый file-input */}
+<input
+  id="hero-upload"
+  type="file"
+  accept="image/*"
+  className="hidden"
+  onChange={e =>
+    e.target.files?.[0] &&
+      uploadAndSet(['heroImage'], e.target.files[0], 'media')
+  }
+/>
+
+{/* Стилизованный label */}
+<label
+  htmlFor="hero-upload"
+  className="
+    inline-block
+    bg-blue-600 hover:bg-blue-700 text-white
+    px-4 py-[0.35rem] rounded rounded-md cursor-pointer
+    select-none
+  "
+>
+  Upload
+</label>
+</div>
+</label>
+
         {/* <input
           type="file"
           accept="image/*"
@@ -235,7 +266,7 @@ export default function AdminPage() {
         /> */}
 
         {/* Video Src URL + Upload */}
-        <label className="block">
+        {/* <label className="block">
           Video Src URL:
           <input
             type="file"
@@ -243,16 +274,45 @@ export default function AdminPage() {
             onChange={e => e.target.files?.[0] &&
               uploadAndSet(['videoSrc'], e.target.files[0], 'videos')}
             className="mt-1 w-full border rounded px-2 py-1"
-            value={contentData.videoSrc}
+            // value={contentData.videoSrc}
             // onChange={e => setContent({ ...contentData, videoSrc: e.target.value })}
           />
-        </label>
+        </label> */}
         {/* <input
           type="file"
           accept="video/*"
           className="mt-2"
           onChange={e => handleFileUpload('videoSrc', e.target.files[0])}
         /> */}
+        <label className="block mt-6">
+        Video Src URL:
+        <div className="flex items-center space-x-2 mb-4">
+        <input
+          type="text"
+          className="w-full border rounded px-2 py-1"
+          value={contentData.videoSrc}
+          onChange={e => updateContent(['videoSrc'], e.target.value)}
+        />
+      {/* Upload new Video */}
+      <label
+        htmlFor="video-upload"
+        className="block inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-[0.35rem] rounded cursor-pointer select-none"
+      >
+        Upload
+      
+      <input
+        id="video-upload"
+        type="file"
+        accept="video/*"
+        className="hidden"
+        onChange={e =>
+          e.target.files?.[0] &&
+            uploadAndSet(['videoSrc'], e.target.files[0], 'media')
+        }
+      />
+      </label>
+      </div>
+      </label>
 
         {/* Button Text */}
         <label className="block">
@@ -527,86 +587,94 @@ export default function AdminPage() {
 
       {/* === Social Feed === */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Social Feed</h2>
+  <h2 className="text-xl font-semibold">Social Feed</h2>
 
-        {contentData.socialFeed.map((post, i) => (
-          <div key={i} className="border rounded p-4 space-y-2 relative">
-            {/* кнопка “удалить” */}
-            <button
-              type="button"
-              onClick={() => {
-                const feed = [...contentData.socialFeed];
-                const trsf = [...transData.socialFeed];
-                feed.splice(i, 1);
-                trsf.splice(i, 1);
-                setContent({ ...contentData, socialFeed: feed });
-                setTrans({ ...transData, socialFeed: trsf });
-              }}
-              className="absolute -right-3 -top-3 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-sm"
-            >
-              ×
-            </button>
+  {contentData.socialFeed.map((post, i) => (
+    <div key={i} className="border rounded p-4 space-y-2 relative">
+      {/* кнопка “удалить” */}
+      <button
+        type="button"
+        onClick={() => {
+          const feed = [...contentData.socialFeed]
+          const trsf = [...(transData.socialFeed || [])]
+          feed.splice(i, 1)
+          trsf.splice(i, 1)
+          setContent({ ...contentData, socialFeed: feed })
+          setTrans({ ...transData, socialFeed: trsf })
+        }}
+        className="absolute -right-3 -top-3 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-sm"
+      >
+        ×
+      </button>
 
-            {/* Link */}
-            <label className="block">
-              Link:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={post.link}
-                onChange={e => {
-                  const arr = [...contentData.socialFeed];
-                  arr[i].link = e.target.value;
-                  setContent({ ...contentData, socialFeed: arr });
-                }}
-              />
-            </label>
-
-            {/* Thumbnail URL */}
-            <label className="block">
-              Thumbnail URL:
-              <input
-                type="file"
-                accept="image/*"
-                onChange={e => e.target.files?.[0] &&
-                  uploadAndSet(['socialFeed', i, 'img'], e.target.files[0], 'images')}
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={post.img}
-                // onChange={e => {
-                //   const arr = [...contentData.socialFeed];
-                //   arr[i].img = e.target.value;
-                //   setContent({ ...contentData, socialFeed: arr });
-                // }}
-              />
-            </label>
-
-            {/* Upload Thumbnail */}
-            {/* <input
-              type="file"
-              accept="image/*"
-              className="mt-2"
-              onChange={e => handleFileUpload('socialFeed', e.target.files[0], i)}
-            /> */}
-          </div>
-        ))}
-
-        {/* Add Post */}
-        <button
-          type="button"
-          onClick={() => {
-            setContent({
-              ...contentData,
-              socialFeed: [...contentData.socialFeed, { link: '', img: '' }]
-            });
-            setTrans({
-              ...transData,
-              socialFeed: [...(transData.socialFeed || []), { img: '' }]
-            });
+      {/* 1. Link */}
+      <label className="block">
+        Link:
+        <input
+          type="text"
+          className="mt-1 w-full border rounded px-2 py-1"
+          value={post.link}
+          onChange={e => {
+            const arr = [...contentData.socialFeed]
+            arr[i].link = e.target.value
+            setContent({ ...contentData, socialFeed: arr })
           }}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          + Add Post
-        </button>
-      </section>
+        />
+      </label>
+
+      {/* 2. Thumbnail URL (текст) */}
+      <label className="block mt-2">
+        Thumbnail URL:
+        <input
+          type="text"
+          className="mt-1 w-full border rounded px-2 py-1"
+          value={post.img}
+          onChange={e => {
+            const arr = [...contentData.socialFeed]
+            arr[i].img = e.target.value
+            setContent({ ...contentData, socialFeed: arr })
+          }}
+        />
+      </label>
+
+      {/* 3. Кнопка загрузки нового файла */}
+      <label
+        htmlFor={`sf-upload-${i}`}
+        className="inline-block mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded cursor-pointer select-none"
+      >
+        Upload new Thumbnail
+      </label>
+      <input
+        id={`sf-upload-${i}`}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={e =>
+          e.target.files?.[0] &&
+            uploadAndSet(['socialFeed', i, 'img'], e.target.files[0], 'media')
+        }
+      />
+    </div>
+  ))}
+
+  {/* + Add Post */}
+  <button
+    type="button"
+    onClick={() => {
+      setContent({
+        ...contentData,
+        socialFeed: [...contentData.socialFeed, { link: '', img: '' }]
+      })
+      setTrans({
+        ...transData,
+        socialFeed: [...(transData.socialFeed || []), { img: '' }]
+      })
+    }}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+  >
+    + Add Post
+  </button>
+</section>
 
       {/* === Location === */}
       <section className="space-y-4">
