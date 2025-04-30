@@ -183,7 +183,8 @@ const TABLE = 'translations'
 
 /* ───────── GET /api/translations/[lang] ───────── */
 export async function GET(_req, { params }) {
-  const { lang } = await params
+  // const { lang } = await params
+  const { lang } = params
 
   const { data, error } = await supabase
     .from(TABLE)
@@ -205,7 +206,8 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { lang } = params
+  // const { lang } = params
+  const { lang } = await params
   const body     = await req.json()
 
   const { error } = await supabase
@@ -221,7 +223,9 @@ export async function PUT(req, { params }) {
   }
 
   // Сброс кеша страницы этого языка
-  revalidatePath('/' + lang)
+  // revalidatePath('/' + lang)
+  revalidatePath(`/${lang}`);
+
 
   return NextResponse.json({ ok: true })
 }

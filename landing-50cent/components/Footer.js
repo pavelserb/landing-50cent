@@ -3,7 +3,7 @@
 
 export default function Footer({ contacts }) {
   return (
-    <footer className="mt-auto py-6 bg-primary text-lightGray">
+    <footer className="mt-auto py-6 bg-white text-lightGray">
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         <div className="space-y-2 mb-4 md:mb-0 text-center md:text-left">
           {contacts

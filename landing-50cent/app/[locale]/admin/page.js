@@ -16,6 +16,7 @@ export default function AdminPage() {
   // const authHeader =
   //   'Basic '  btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
 
+  // const authHeader = 'Basic ' + btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
   const authHeader = 'Basic ' + btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
 
 
@@ -61,7 +62,9 @@ export default function AdminPage() {
 
   /* -------- render -------- */
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-12">
+    <div className="p-0 max-w-4xl mx-auto space-y-12">
+
+      <div className="flex justify-between sticky top-[76px] pt-[32px] pb-[10px] bg-white z-10 transition-all duration-200">
 
       {/* language switch */}
       <div className="space-x-2">
@@ -72,7 +75,19 @@ export default function AdminPage() {
           </button>
         ))}
       </div>
-      {status && <p className="text-red-600">{status}</p>}
+      {status && <p className="text-red-600 content-center">{status}</p>}
+
+      {/* Кнопка сохранения */}
+      <div className="text-center">
+        <button
+          onClick={saveAll}
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+        >
+          Save All
+        </button>
+      </div>
+
+      </div>
 
       {/* === Hero === */}
       <section className="space-y-4">
@@ -773,14 +788,14 @@ export default function AdminPage() {
       </section>
 
       {/* Кнопка сохранения */}
-      <div className="text-center">
+      {/* <div className="text-center">
         <button
           onClick={saveAll}
           className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
         >
           Save All
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -131,9 +131,30 @@ export default async function LocaleLayout({ children, params }) {
 
   const supabase = createClient();
 
+  // const [{ data: tr }, { data: cnt }] = await Promise.all([
+  //   supabase.from('translations').select('data').eq('locale', locale).single(),
+  //   supabase.from('content')     .select('data').eq('id',     'main').single()
+  // ]);
+  // const { data: tr, error } = await supabase
+  //   .from('translations')
+  //   .select('data')
+  //   .eq('locale', locale)
+  //   .single();
+
+  //   if (error) throw error;
+  //   const messages = tr?.data ?? {};
+  // Параллельно достаём переводы и контент (contacts в Footer)
   const [{ data: tr }, { data: cnt }] = await Promise.all([
-    supabase.from('translations').select('data').eq('locale', locale).single(),
-    supabase.from('content')     .select('data').eq('id',     'main').single()
+    supabase
+      .from('translations')
+      .select('data')
+      .eq('locale', locale)
+      .single(),
+    supabase
+      .from('content')
+      .select('data')
+      .eq('id', 'main')
+      .single()
   ]);
 
   const messages = tr?.data ?? {};
