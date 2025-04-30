@@ -1,14 +1,18 @@
 // app/api/early-access/route.js
 import { NextResponse }  from 'next/server';
-import { createClient }  from '@supabase/supabase-js';
+// import { createClient }  from '@supabase/supabase-js';
+// import { supabaseBrowser }  from '@supabase/supabase-js';
+// import { supabaseServer } from '@/lib/supabase'
+import { supabaseServer }  from '@/lib/supabaseServer'
 
-const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+// const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Missing Supabase env vars');
-}
+// if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+//   console.error('Missing Supabase env vars');
+// }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// const supabase = supabaseBrowser(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = supabaseServer;
 
 export async function POST(req) {
   try {

@@ -121,7 +121,8 @@
 
 // app/api/content/route.js
 import { NextResponse } from 'next/server'
-import { supabase }     from '@/lib/supabase'
+// import { supabase }     from '@/lib/supabase'
+import { supabaseServer } from '@/lib/supabaseServer'
 
 /* ───────── helper: минимальный basic-auth ───────── */
 function isAuthOK (req) {
@@ -135,7 +136,7 @@ function isAuthOK (req) {
 
 /* ───────── GET  (получить весь контент) ───────── */
 export async function GET () {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseServer
     .from('content')
     .select('data')
     .eq('id', 'main')
@@ -157,7 +158,7 @@ export async function PUT (req) {
 
   const body = await req.json()
 
-  const { error } = await supabase
+  const { error } = await supabaseServer
     .from('content')
     .upsert({ id: 'main', data: body })
 

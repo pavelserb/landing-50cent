@@ -1,10 +1,12 @@
 // app/[locale]/admin/page.js
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
+import { supabaseBrowser } from '@/lib/supabaseClient'
 
 const LOCALES = ['en', 'pl']
+const ADMIN_USER = 'admin'
 
 export default function AdminPage() {
   const { locale: initial } = useParams()
@@ -13,52 +15,106 @@ export default function AdminPage() {
   const [transData, setTrans]     = useState(null)
   const [status, setStatus]       = useState('')
 
-  // const authHeader =
-  //   'Basic '  btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
+  const authHeader = 'Basic ' + btoa(`${ADMIN_USER}:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
 
-  // const authHeader = 'Basic ' + btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
-  const authHeader = 'Basic ' + btoa(`admin:${process.env.NEXT_PUBLIC_ADMIN_PASS}`)
-
-
-  /* load */
+  // Load content & translations
   useEffect(() => {
     setStatus('Loading…')
     Promise.all([
-      fetch('/api/content', { headers: { Authorization: authHeader } }).then(r=>r.json()),
-      fetch(`/api/translations/${locale}`, { headers: { Authorization: authHeader } }).then(r=>r.json())
+      fetch('/api/content', { headers: { Authorization: authHeader } }).then(r => r.json()),
+      fetch(`/api/translations/${locale}`, { headers: { Authorization: authHeader } }).then(r => r.json())
     ])
-      .then(([c,t])=>{ setContent(c); setTrans(t); setStatus('') })
-      .catch(()=> setStatus('Error loading data'))
+      .then(([c, t]) => { setContent(c); setTrans(t); setStatus('') })
+      .catch(() => setStatus('Error loading data'))
   }, [locale, authHeader])
 
-  /* save */
-  const saveAll = async () => {
+  // Save all (PUT) with callback
+  const saveAll = useCallback(async () => {
     setStatus('Saving…')
     try {
       await Promise.all([
         fetch('/api/content', {
-          method:'PUT', headers:{Authorization:authHeader,'Content-Type':'application/json'},
-          body: JSON.stringify(contentData,null,2)
+          method: 'PUT',
+          headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+          body: JSON.stringify(contentData, null, 2)
         }),
         fetch(`/api/translations/${locale}`, {
-          method:'PUT', headers:{Authorization:authHeader,'Content-Type':'application/json'},
-          body: JSON.stringify(transData,null,2)
+          method: 'PUT',
+          headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+          body: JSON.stringify(transData, null, 2)
         })
       ])
       setStatus('Saved successfully')
-    } catch { setStatus('Error saving data') }
-  }
+    } catch {
+      setStatus('Error saving data')
+    }
+  }, [contentData, transData, authHeader, locale])
+
+  // «Сохранить по Ctrl+S / ⌘+S»
+  useEffect(() => {
+    const onKey = e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        saveAll();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [saveAll]);
+
+  const storage = supabaseBrowser.storage
+  // const storage = supabaseBrowser
+
+  // Хелпер для загрузки файлов:
+  const uploadAndSet = useCallback(async (pathInContent, file, bucket = 'media') => {
+
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}.${fileExt}`
+    const filePath = `${locale}/${bucket}/${fileName}`
+
+    const { data: upData, error: upErr } = await storage
+      .from(bucket)
+      .upload(filePath, file, { upsert: true })
+
+    if (upErr) {
+      console.error('Upload error', upErr)
+      setStatus('Upload failed')
+      return
+    }
+
+    const { data: { publicUrl } } = storage
+      .from(bucket)
+      .getPublicUrl(filePath)
+
+    // Обновляем contentData по пути pathInContent, например ['heroImage']
+    updateContent(pathInContent, publicURL)
+    setStatus('')      // сбросить статус
+
+  }, [locale, storage])  
+  // })  
+
 
   if (!contentData || !transData)
     return <p className="p-8 text-center">{status || 'Loading…'}</p>
 
-  /* -------- helpers -------- */
-  const updateContent = (path, val) => {
-    const next = structuredClone(contentData)
-    path.reduce((obj, key, idx) => (
-      idx === path.length-1 ? (obj[key]=val) : obj[key] = {...obj[key]}, obj[key]), next)
-    setContent(next)
+  // Helpers for add/remove
+  const addItem = (key, initC, initT) => {
+    setContent(prev => ({ ...prev, [key]: [...(prev[key]||[]), initC] }))
+    setTrans(prev => ({ ...prev,   [key]: [...(prev[key]||[]), initT] }))
   }
+  const removeItem = (key, index) => {
+    setContent(prev => {
+      const arr = [...(prev[key]||[])]
+      arr.splice(index,1)
+      return { ...prev, [key]: arr }
+    })
+    setTrans(prev => {
+      const arr = [...(prev[key]||[])]
+      arr.splice(index,1)
+      return { ...prev, [key]: arr }
+    })
+  }
+
 
   /* -------- render -------- */
   return (
@@ -90,7 +146,7 @@ export default function AdminPage() {
       </div>
 
       {/* === Hero === */}
-      <section className="space-y-4">
+      {/* <section className="space-y-4">
         <h2 className="text-xl font-semibold">Hero</h2>
         <label className="block">
           Site Title:
@@ -132,7 +188,83 @@ export default function AdminPage() {
             onChange={e => setTrans({ ...transData, buyButton: e.target.value })}
           />
         </label>
+      </section> */}
+
+      {/* === Hero === */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Hero</h2>
+
+        {/* Site Title */}
+        <label className="block">
+          Site Title:
+          <input
+            className="mt-1 w-full border rounded px-2 py-1"
+            value={transData.siteTitle}
+            onChange={e => setTrans({ ...transData, siteTitle: e.target.value })}
+          />
+        </label>
+
+        {/* Event Date */}
+        <label className="block">
+          Event Date:
+          <input
+            className="mt-1 w-full border rounded px-2 py-1"
+            value={transData.eventDate}
+            onChange={e => setTrans({ ...transData, eventDate: e.target.value })}
+          />
+        </label>
+
+        {/* Hero Image URL + Upload */}
+        <label className="block">
+          Hero Image URL:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={e => e.target.files?.[0] && 
+              uploadAndSet(['heroImage'], e.target.files[0], 'images')}
+            className="mt-1 w-full border rounded px-2 py-1"
+            value={contentData.heroImage}
+            // onChange={e => setContent({ ...contentData, heroImage: e.target.value })}
+          />
+        </label>
+        {/* <input
+          type="file"
+          accept="image/*"
+          className="mt-2"
+          onChange={e => handleFileUpload('heroImage', e.target.files[0])}
+        /> */}
+
+        {/* Video Src URL + Upload */}
+        <label className="block">
+          Video Src URL:
+          <input
+            type="file"
+            accept="video/*"
+            onChange={e => e.target.files?.[0] &&
+              uploadAndSet(['videoSrc'], e.target.files[0], 'videos')}
+            className="mt-1 w-full border rounded px-2 py-1"
+            value={contentData.videoSrc}
+            // onChange={e => setContent({ ...contentData, videoSrc: e.target.value })}
+          />
+        </label>
+        {/* <input
+          type="file"
+          accept="video/*"
+          className="mt-2"
+          onChange={e => handleFileUpload('videoSrc', e.target.files[0])}
+        /> */}
+
+        {/* Button Text */}
+        <label className="block">
+          Button Text:
+          <input
+            className="mt-1 w-full border rounded px-2 py-1"
+            value={transData.buyButton}
+            onChange={e => setTrans({ ...transData, buyButton: e.target.value })}
+          />
+        </label>
       </section>
+
 
       {/* === Video  Advantages === */}
       <section className="space-y-4">
@@ -240,67 +372,6 @@ export default function AdminPage() {
         ))}
       </section>
 
-      {/* ----------------  News / Updates  ---------------- */}
-      {/* <section className="space-y-4">
-        <h2 className="text-xl font-semibold">News / Updates</h2>
-
-        {contentData.news.map((newsItem, i) => (
-          <div key={i} className="border rounded p-4 space-y-2">
-            <label>
-              Link:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={newsItem.link}
-                onChange={e => {
-                  const arr = [...contentData.news]
-                  arr[i].link = e.target.value
-                  setContent({ ...contentData, news: arr })
-                }}
-              />
-            </label>
-
-            <label>
-              Title:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={transData.news[i]?.title}
-                onChange={e => {
-                  const arr = [...transData.news]
-                  arr[i].title = e.target.value
-                  setTrans({ ...transData, news: arr })
-                }}
-              />
-            </label>
-
-            <label>
-              Description:
-              <textarea
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={transData.news[i]?.description}
-                onChange={e => {
-                  const arr = [...transData.news]
-                  arr[i].description = e.target.value
-                  setTrans({ ...transData, news: arr })
-                }}
-              />
-            </label>
-
-            <label>
-              Button Text:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={transData.news[i]?.buttonText}
-                onChange={e => {
-                  const arr = [...transData.news]
-                  arr[i].buttonText = e.target.value
-                  setTrans({ ...transData, news: arr })
-                }}
-              />
-            </label>
-          </div>
-        ))}
-      </section> */}
-
 <section className="space-y-4">
   <h2 className="text-xl font-semibold">News / Updates</h2>
 
@@ -379,20 +450,20 @@ export default function AdminPage() {
   <button
     type="button"
     onClick={() => {
-      setContent({
-        ...contentData,
-        news: [...(contentData.news ?? []), { link: '' }]
-      })
-      setTrans({
-        ...transData,
-        news: [...(transData.news ?? []), { title: '', description: '', buttonText: '' }]
-      })
-    }}
-    className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-  >
-    + Add news item
-  </button>
-</section>
+        setContent({
+          ...contentData,
+          news: [...(contentData.news ?? []), { link: '' }]
+        })
+        setTrans({
+          ...transData,
+          news: [...(transData.news ?? []), { title: '', description: '', buttonText: '' }]
+        })
+      }}
+      className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+    >
+      + Add news item
+    </button>
+  </section>
 
       {/* === Music Section (общие поля) === */}
       <section className="space-y-4">
@@ -407,85 +478,8 @@ export default function AdminPage() {
         </label>
       </section>
 
-      {/* === Testimonials === */}
-      {/* <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Testimonials</h2>
-        {contentData.testimonials.map((item, i) => (
-          <div key={i} className="border rounded p-4 space-y-2">
-            <label>
-              Name:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={item.name}
-                onChange={e => {
-                  const arr = [...contentData.testimonials]
-                  arr[i].name = e.target.value
-                  setContent({ ...contentData, testimonials: arr })
-                }}
-              />
-            </label>
-            <label>
-              Role:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={item.role}
-                onChange={e => {
-                  const arr = [...contentData.testimonials]
-                  arr[i].role = e.target.value
-                  setContent({ ...contentData, testimonials: arr })
-                }}
-              />
-            </label>
-            <label>
-              Text:
-              <textarea
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={transData.testimonials[i]?.text}
-                onChange={e => {
-                  const arr = [...transData.testimonials]
-                  arr[i].text = e.target.value
-                  setTrans({ ...transData, testimonials: arr })
-                }}
-              />
-            </label>
-          </div>
-        ))}
-      </section> */}
-
-      {/* === Social Feed === */}
-      {/* <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Social Feed</h2>
-        {contentData.socialFeed.map((s, i) => (
-          <div key={i} className="border rounded p-4 space-y-2">
-            <label>
-              Image URL:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={s.img}
-                onChange={e => {
-                  const arr = [...contentData.socialFeed]
-                  arr[i].img = e.target.value
-                  setContent({ ...contentData, socialFeed: arr })
-                }}
-              />
-            </label>
-            <label>
-              Link:
-              <input
-                className="mt-1 w-full border rounded px-2 py-1"
-                value={s.link}
-                onChange={e => {
-                  const arr = [...contentData.socialFeed]
-                  arr[i].link = e.target.value
-                  setContent({ ...contentData, socialFeed: arr })
-                }}
-              />
-            </label>
-          </div>
-        ))}
-      </section> */}
        {/* === Social Feed === */}
-      <section className="space-y-4">
+      {/* <section className="space-y-4">
         <h2 className="text-xl font-semibold">Social Feed</h2>
 
         {contentData.socialFeed.map((post, i) => (
@@ -529,67 +523,90 @@ export default function AdminPage() {
         >
             Add Post
         </button>
-      </section>
+      </section> */}
 
+      {/* === Social Feed === */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Social Feed</h2>
 
-      {/* === Location === */}
-      {/* <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Location</h2>
+        {contentData.socialFeed.map((post, i) => (
+          <div key={i} className="border rounded p-4 space-y-2 relative">
+            {/* кнопка “удалить” */}
+            <button
+              type="button"
+              onClick={() => {
+                const feed = [...contentData.socialFeed];
+                const trsf = [...transData.socialFeed];
+                feed.splice(i, 1);
+                trsf.splice(i, 1);
+                setContent({ ...contentData, socialFeed: feed });
+                setTrans({ ...transData, socialFeed: trsf });
+              }}
+              className="absolute -right-3 -top-3 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-sm"
+            >
+              ×
+            </button>
 
-        <label>Address:
-          <input className="mt-1 w-full border rounded px-2 py-1"
-            value={contentData.location.address}
-            onChange={e =>
-              setContent({ ...contentData,
-                location:{ ...contentData.location, address:e.target.value }})}
-          />
-        </label>
-
-        <label>Map Embed URL:
-          <textarea className="mt-1 w-full border rounded px-2 py-1"
-            value={contentData.location.mapEmbed}
-            onChange={e =>
-              setContent({ ...contentData,
-                location:{ ...contentData.location, mapEmbed:e.target.value }})}
-          />
-        </label> */}
-
-        {/* contacts inside location */}
-        {/* {contentData.location.contacts.map((ct, i) => (
-          <div key={i} className="border rounded p-4 space-y-2">
-            <label>Type:
-              <input className="mt-1 w-full border rounded px-2 py-1"
-                value={ct.type}
-                onChange={e=>{
-                  const arr=[...contentData.location.contacts]
-                  arr[i].type=e.target.value
-                  setContent({...contentData, location:{...contentData.location, contacts:arr}})
+            {/* Link */}
+            <label className="block">
+              Link:
+              <input
+                className="mt-1 w-full border rounded px-2 py-1"
+                value={post.link}
+                onChange={e => {
+                  const arr = [...contentData.socialFeed];
+                  arr[i].link = e.target.value;
+                  setContent({ ...contentData, socialFeed: arr });
                 }}
               />
             </label>
-            <label>Value:
-              <input className="mt-1 w-full border rounded px-2 py-1"
-                value={ct.value}
-                onChange={e=>{
-                  const arr=[...contentData.location.contacts]
-                  arr[i].value=e.target.value
-                  setContent({...contentData, location:{...contentData.location, contacts:arr}})
-                }}
+
+            {/* Thumbnail URL */}
+            <label className="block">
+              Thumbnail URL:
+              <input
+                type="file"
+                accept="image/*"
+                onChange={e => e.target.files?.[0] &&
+                  uploadAndSet(['socialFeed', i, 'img'], e.target.files[0], 'images')}
+                className="mt-1 w-full border rounded px-2 py-1"
+                value={post.img}
+                // onChange={e => {
+                //   const arr = [...contentData.socialFeed];
+                //   arr[i].img = e.target.value;
+                //   setContent({ ...contentData, socialFeed: arr });
+                // }}
               />
             </label>
-            <label>Link:
-              <input className="mt-1 w-full border rounded px-2 py-1"
-                value={ct.link}
-                onChange={e=>{
-                  const arr=[...contentData.location.contacts]
-                  arr[i].link=e.target.value
-                  setContent({...contentData, location:{...contentData.location, contacts:arr}})
-                }}
-              />
-            </label>
+
+            {/* Upload Thumbnail */}
+            {/* <input
+              type="file"
+              accept="image/*"
+              className="mt-2"
+              onChange={e => handleFileUpload('socialFeed', e.target.files[0], i)}
+            /> */}
           </div>
         ))}
-      </section> */}
+
+        {/* Add Post */}
+        <button
+          type="button"
+          onClick={() => {
+            setContent({
+              ...contentData,
+              socialFeed: [...contentData.socialFeed, { link: '', img: '' }]
+            });
+            setTrans({
+              ...transData,
+              socialFeed: [...(transData.socialFeed || []), { img: '' }]
+            });
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        >
+          + Add Post
+        </button>
+      </section>
 
       {/* === Location === */}
       <section className="space-y-4">
@@ -657,7 +674,7 @@ export default function AdminPage() {
       </section>
 
       {/* === FAQ === */}
-      <section className="space-y-4">
+      {/* <section className="space-y-4">
         <h2 className="text-xl font-semibold">FAQ</h2>
         {contentData.faq.map((_, i) => (
           <div key={i} className="border rounded p-4 space-y-2">
@@ -687,7 +704,73 @@ export default function AdminPage() {
             </label>
           </div>
         ))}
+      </section> */}
+
+      <section className="space-y-4 relative">
+        <h2 className="text-xl font-semibold">FAQ</h2>
+        {(contentData.faq ?? []).map((_, i) => (
+          <div key={i} className="border rounded p-4 space-y-2 relative">
+            {/* ❗️ Удалить запись */}
+            <button
+              type="button"
+              onClick={() => {
+                const faqC = [...contentData.faq]
+                const faqT = [...transData.faq]
+                faqC.splice(i, 1)
+                faqT.splice(i, 1)
+                setContent({ ...contentData, faq: faqC })
+                setTrans  ({ ...transData,   faq: faqT })
+              }}
+              className="absolute -right-3 -top-3 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-sm"
+              title="Delete FAQ"
+            >×</button>
+
+            <label>Question:
+              <input
+                className="mt-1 w-full border rounded px-2 py-1"
+                value={transData.faq[i]?.question || ''}
+                onChange={e => {
+                  const arr = [...transData.faq]
+                  arr[i] = { ...arr[i], question: e.target.value }
+                  setTrans({ ...transData, faq: arr })
+                }}
+              />
+            </label>
+
+            <label>Answer:
+              <textarea
+                className="mt-1 w-full border rounded px-2 py-1"
+                value={transData.faq[i]?.answer || ''}
+                onChange={e => {
+                  const arr = [...transData.faq]
+                  arr[i] = { ...arr[i], answer: e.target.value }
+                  setTrans({ ...transData, faq: arr })
+                }}
+              />
+            </label>
+          </div>
+        ))}
+
+        {/* ❗️ Кнопка «Добавить FAQ» */}
+        <button
+          type="button"
+          onClick={() => {
+            setContent({
+              ...contentData,
+              faq: [...(contentData.faq ?? []), { question: '', answer: '' }]
+            })
+            setTrans({
+              ...transData,
+              faq: [...(transData.faq ?? []),       { question: '', answer: '' }]
+            })
+          }}
+          className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          + Add FAQ
+        </button>
       </section>
+
+
 
       {/* === Early Access Form === */}
       <section className="space-y-4">
@@ -786,16 +869,6 @@ export default function AdminPage() {
           </div>
         ))}
       </section>
-
-      {/* Кнопка сохранения */}
-      {/* <div className="text-center">
-        <button
-          onClick={saveAll}
-          className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
-        >
-          Save All
-        </button>
-      </div> */}
     </div>
   )
 }

@@ -1,8 +1,9 @@
 // lib/getTranslationsFromDb.ts
-import { createClient } from '@/lib/supabase'
+// import { createClient } from '@/lib/supabase'
+import { supabaseServer } from '@/lib/supabase'
 
 export async function getTranslationsFromDb (locale: string) {
-  const supabase = createClient()
+  const supabase = supabaseServer()
   const { data, error } = await supabase
     .from('translations')
     .select('data')

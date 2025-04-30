@@ -109,7 +109,8 @@ import Header                       from '@/components/Header';
 import Footer                       from '@/components/Footer';
 import MobileStickyBuy              from '@/components/MobileStickyBuy';
 import Script                       from 'next/script';
-import { createClient }             from '@/lib/supabase';   // anon-client
+// import { createClient }             from '@/lib/supabase';   // anon-client
+import { supabaseServer } from '@/lib/supabaseServer.js';
 
 const montserrat = Montserrat({ subsets:['latin'], weight:['400','700'], variable:'--font-montserrat' });
 const oswald     = Oswald    ({ subsets:['latin'], weight:['400','700'], variable:'--font-oswald' });
@@ -129,7 +130,8 @@ export default async function LocaleLayout({ children, params }) {
   const { locale } = await params
   setRequestLocale(locale);
 
-  const supabase = createClient();
+  // const supabase = createClient();
+  const supabase = supabaseServer;
 
   // const [{ data: tr }, { data: cnt }] = await Promise.all([
   //   supabase.from('translations').select('data').eq('locale', locale).single(),

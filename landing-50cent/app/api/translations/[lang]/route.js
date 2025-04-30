@@ -165,7 +165,8 @@
 
 // app/api/translations/[lang]/route.js
 import { NextResponse }   from 'next/server'
-import { supabase }       from '@/lib/supabase'
+// import { supabase }       from '@/lib/supabase'
+import { supabaseServer } from '@/lib/supabaseServer'
 import { revalidatePath } from 'next/cache'
 
 /* ────── mini Basic-Auth ────── */
@@ -186,7 +187,7 @@ export async function GET(_req, { params }) {
   // const { lang } = await params
   const { lang } = params
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseServer
     .from(TABLE)
     .select('data')
     .eq('locale', lang)
@@ -210,7 +211,7 @@ export async function PUT(req, { params }) {
   const { lang } = await params
   const body     = await req.json()
 
-  const { error } = await supabase
+  const { error } = await supabaseServer
     .from(TABLE)
     .upsert(
       { locale: lang, data: body, updated_at: new Date().toISOString() },
