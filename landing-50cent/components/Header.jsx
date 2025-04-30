@@ -315,7 +315,7 @@ export default function Header() {
               animate={{ y:0,  opacity:1 }}
               exit={{ y:-20, opacity:0 }}
               transition={{ type:'spring', stiffness:320, damping:30 }}
-              className="absolute right-4 top-4 w-48 bg-[#1a1a1a] p-4 rounded-lg shadow-2xl"
+              className="absolute right-4 top-4 w-auto bg-white p-4 rounded-lg shadow-2xl"
               onClick={e => e.stopPropagation()}
             >
               <LanguageSwitcher
